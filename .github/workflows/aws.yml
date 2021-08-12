@@ -18,6 +18,8 @@ jobs:
         shell: bash
         env:
           PEM_KEY : ${{secrets.KEY}}
+      - name: Change chmod permission
+        run: chmod 400 key.pem
 
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
