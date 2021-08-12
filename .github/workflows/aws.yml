@@ -18,18 +18,17 @@ jobs:
         shell: bash
         env:
           PEM_KEY : ${{secrets.KEY}}
-      - uses: webfactory/ssh-agent@v0.5.3
+
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
         with:
-          ssh-private-key: ${{ secrets.KEY }}
-      # - name: Create SSH key
-      #   run: |
-      #     mkdir -p ~/.ssh/
-      #     echo "$SSH_PRIVATE_KEY" > ../private.key
-      #     sudo chmod 600 ../private.key
-      #     echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-      #   shell: bash
-      # - name: Add to known hosts
-      #   run: ssh-keyscan -H {{ secrets.PUBLIC_IP }} >> ~/.ssh/known_hosts
+          key: ${{ secrets.KEY }}
+          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ${{ secrets.PUBLIC_IP }} >> ~/.ssh/known_hosts
+
+
       - name: SSH to ec2
         run: ssh ubuntu@${{ secrets.PUBLIC_IP }} -i key.pem
       - name: cd to project
