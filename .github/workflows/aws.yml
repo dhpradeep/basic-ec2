@@ -1,43 +1,19 @@
-name: Publish to EC2 AWS
-
+name: Deploy EC2
 on:
   push:
-    branches: [main]
-
+    branches:
+      - main
 jobs:
-  publish:
-    name: Publish to EC2 AWS
+  Deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
-      - name: create Pem file
-        run: |
-          echo $PEM_KEY >> key.pem
-          cat key.pem
-        shell: bash
-        env:
-          PEM_KEY : ${{secrets.KEY}}
-      - name: Change chmod permission
-        run: chmod 400 key.pem
-
-      - name: Install SSH Key
+        uses: actions/checkout@v2
+      - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.KEY }}
-          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
-
-      - name: Adding Known Hosts
-        run: ssh-keyscan -H ${{ secrets.PUBLIC_IP }} >> ~/.ssh/known_hosts
-
-
-      - name: SSH to ec2
-        run: ssh -tt ubuntu@${{ secrets.PUBLIC_IP }}
-      - name: cd to project
-        run: cd shangrila-web-application
-      - name: Prune docker
-        run: sudo docker system prune
-      - name: Docker down
-        run: sudo docker-compose down
-      - name: Docker up with build
-        run: sudo docker-compose up --build -d
+          name: id_rsa
+          known_hosts: ${{ secrets.PUBLIC_IP }}
+      - name: rsync over ssh
+        run: ./execute.sh
