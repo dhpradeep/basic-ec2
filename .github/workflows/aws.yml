@@ -32,7 +32,7 @@ jobs:
 
 
       - name: SSH to ec2
-        run: ssh -tt ubuntu@${{ secrets.PUBLIC_IP }} -i key.pem
+        run: ssh -tt ubuntu@${{ secrets.PUBLIC_IP }}
       - name: cd to project
         run: cd shangrila-web-application
       - name: Prune docker
