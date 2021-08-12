@@ -10,7 +10,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Permission
-        uses: chmod +x execute.sh
+        run: chmod +x execute.sh
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
